@@ -1,0 +1,25 @@
+{
+  "data": {
+    "country": "U.S.",
+    "marketIndicator": "Market Closed",
+    "uiMarketIndicator": "Market Closed",
+    "marketCountDown": "Market Opens in 2D 11H 30M",
+    "preMarketOpeningTime": "Jul 12, 2024 04:00 AM ET",
+    "preMarketClosingTime": "Jul 12, 2024 09:30 AM ET",
+    "marketOpeningTime": "Jul 12, 2024 09:30 AM ET",
+    "marketClosingTime": "Jul 12, 2024 04:00 PM ET",
+    "afterHoursMarketOpeningTime": "Jul 12, 2024 04:00 PM ET",
+    "afterHoursMarketClosingTime": "Jul 12, 2024 08:00 PM ET",
+    "previousTradeDate": "Jul 11, 2024",
+    "nextTradeDate": "Jul 15, 2024",
+    "isBusinessDay": true,
+    "mrktStatus": "Closed",
+    "mrktCountDown": "Opens in 2D 11H 30M"
+  },
+  "message": null,
+  "status": {
+    "rCode": 200,
+    "bCodeMessage": null,
+    "developerMessage": null
+  }
+}

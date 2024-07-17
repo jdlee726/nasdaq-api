@@ -1,0 +1,1029 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>alphatory</groupId>
+    <artifactId>alphatory-parent</artifactId>
+    <version>1.0.0-ALPHATORY1</version>
+    <packaging>pom</packaging>
+
+    <!-- https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-Artifacts#spring-repositories -->
+    <repositories>
+        <!-- for com.github.binance-exchange -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+
+        <repository>
+            <id>repository.spring.release</id>
+            <name>Spring GA Repository</name>
+            <url>https://repo.spring.io/release</url>
+        </repository>
+        <repository>
+            <id>repository.spring.milestone</id>
+            <name>Spring Milestone Repository</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+        <repository>
+            <id>repository.spring.snapshot</id>
+            <name>Spring Snapshot Repository</name>
+            <url>https://repo.spring.io/snapshot</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>plugin-repository.spring.release</id>
+            <name>Spring GA Repository</name>
+            <url>https://repo.spring.io/release</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>plugin-repository.spring.milestone</id>
+            <name>Spring Milestone Repository</name>
+            <url>https://repo.spring.io/milestone</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>plugin-repository.spring.snapshot</id>
+            <name>Spring Snapshot Repository</name>
+            <url>https://repo.spring.io/snapshot</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <properties>
+        <java.version>22</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <!-- <maven.test.skip>true</maven.test.skip> -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+
+        <!-- // begin spring boot -->
+        <org.springframework.boot.version>3.3.1</org.springframework.boot.version>
+        <org.springframework.cloud.version>2023.0.3</org.springframework.cloud.version>
+        <!-- \\ end spring boot -->
+        <maven-bom.version>3.9.8</maven-bom.version>
+        <org.apache.maven.resolver.version>1.9.21</org.apache.maven.resolver.version>
+
+        <!-- // begin versions -->
+        <org.knowm.xchange.version>5.2.0</org.knowm.xchange.version>
+        <java-jwt.version>4.4.0</java-jwt.version>
+        <binance-java-api.version>master</binance-java-api.version>
+
+        <jasypt.version>3.0.5</jasypt.version>
+        <jjwt.version>0.12.6</jjwt.version>
+
+        <swagger-api.version>2.2.22</swagger-api.version>
+        <com.slack.api.version>1.40.3</com.slack.api.version>
+        <!-- \\ end versions -->
+
+        <dockerPath>alphatory/${project.artifactId}</dockerPath>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.5.0</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-ban-duplicate-classes</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <skip>true</skip>
+                                <rules>
+                                    <banDuplicateClasses>
+                                        <scopes>
+                                            <scope>compile</scope>
+                                            <scope>provided</scope>
+                                        </scopes>
+                                        <findAllDuplicates>true</findAllDuplicates>
+                                        <ignoreWhenIdentical>false</ignoreWhenIdentical>
+                                    </banDuplicateClasses>
+                                </rules>
+                                <fail>false</fail>
+                            </configuration>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>extra-enforcer-rules</artifactId>
+                            <version>1.8.0</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.cmeza</groupId>
+                    <artifactId>spring-data-generator</artifactId>
+                    <version>2.0.1</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.openapitools</groupId>
+                    <artifactId>openapi-generator-maven-plugin</artifactId>
+                    <version>7.7.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+                    <configuration>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+<!--                        <parameters>true</parameters>-->
+                        <showWarnings>true</showWarnings>
+                        <showDeprecation>false</showDeprecation>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.1</version>
+                    <configuration>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+
+                <!-- Scala plugins -->
+                <plugin>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <version>4.9.2</version>
+                    <executions>
+                        <execution>
+                            <id>compile</id>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <phase>compile</phase>
+                        </execution>
+
+                        <execution>
+                            <id>test-compile</id>
+                            <goals>
+                                <goal>testCompile</goal>
+                            </goals>
+                            <phase>test-compile</phase>
+                        </execution>
+
+                        <execution>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <args>
+                            <!-- https://github.com/scala/scala-module-dependency-sample/blob/master/maven-sample/pom.xml -->
+                            <!-- work-around for https://issues.scala-lang.org/browse/SI-8358 -->
+                            <arg>-nobootcp</arg>
+                        </args>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.6.0</version>
+                    <executions>
+                        <execution>
+                            <id>add-source</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>add-source</goal>
+                            </goals>
+                            <configuration>
+                                <sources>
+                                    <source>src/main/scala</source>
+                                </sources>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>add-test-source</id>
+                            <phase>generate-test-sources</phase>
+                            <goals>
+                                <goal>add-test-source</goal>
+                            </goals>
+                            <configuration>
+                                <sources>
+                                    <source>src/test/scala</source>
+                                </sources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.4.2</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.3.1</version>
+                    <configuration>
+                        <testFailureIgnore>false</testFailureIgnore>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.7.1</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.4.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${org.springframework.boot.version}</version>
+                    <executions>
+                        <execution>
+                            <id>repackage</id>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                            <configuration>
+                                <classifier>exec</classifier>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>build-info</id>
+                            <goals>
+                                <goal>build-info</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>1.15.0</version>
+                    <configuration>
+                        <workingDirectory>workspace</workingDirectory>
+                        <installDirectory>node-and-npm</installDirectory>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>install node and npm</id>
+                            <goals>
+                                <goal>install-node-and-npm</goal>
+                            </goals>
+                            <configuration>
+                                <!-- See https://nodejs.org/en/download/ for latest node and npm (lts) versions -->
+                                <nodeVersion>v20.14.0</nodeVersion>
+                                <npmVersion>10.7.0</npmVersion>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>npm install</id>
+                            <goals>
+                                <goal>npm</goal>
+                            </goals>
+                            <configuration>
+                                <arguments>install</arguments>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>npm run build</id>
+                            <goals>
+                                <goal>npm</goal>
+                            </goals>
+                            <configuration>
+                                <arguments>run build</arguments>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.github.ulisesbocchio</groupId>
+                    <artifactId>jasypt-maven-plugin</artifactId>
+                    <version>${jasypt.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.google.cloud.tools</groupId>
+                    <artifactId>jib-maven-plugin</artifactId>
+                    <version>3.4.3</version>
+                    <configuration>
+                        <from>
+                            <image>openjdk:${java.version}-slim</image>
+                        </from>
+                        <to>
+                            <image>${dockerPath}</image>
+                            <tags>
+                                <!--<tag>${project.version}</tag>-->
+                                <tag>latest</tag>
+                            </tags>
+                        </to>
+                        <container>
+                            <environment>
+                                <SPRING_OUTPUT_ANSI_ENABLED>ALWAYS</SPRING_OUTPUT_ANSI_ENABLED>
+                            </environment>
+                            <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+                            <filesModificationTime>${maven.build.timestamp}</filesModificationTime>
+                        </container>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>deploy</phase>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>io.github.git-commit-id</groupId>
+                    <artifactId>git-commit-id-maven-plugin</artifactId>
+                    <version>9.0.1</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>revision</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                        <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
+                        <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                        <includeOnlyProperties>
+                            <includeOnlyProperty>^git.branch$</includeOnlyProperty>
+                            <includeOnlyProperty>^git.build.time$</includeOnlyProperty>
+                            <includeOnlyProperty>^git.build.user.name$</includeOnlyProperty>
+                            <includeOnlyProperty>^git.commit.id$</includeOnlyProperty>
+                            <includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
+                            <includeOnlyProperty>^git.commit.id.describe$</includeOnlyProperty>
+                            <includeOnlyProperty>^git.commit.message.full$</includeOnlyProperty>
+                            <includeOnlyProperty>^git.commit.message.short$</includeOnlyProperty>
+                            <includeOnlyProperty>^git.commit.time$</includeOnlyProperty>
+                            <includeOnlyProperty>^git.commit.user.name$</includeOnlyProperty>
+                            <includeOnlyProperty>^git.dirty$</includeOnlyProperty>
+                        </includeOnlyProperties>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${org.springframework.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${org.springframework.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.statemachine</groupId>
+                <artifactId>spring-statemachine-bom</artifactId>
+                <version>4.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>1.0.0.M1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi</artifactId>
+                <version>2.6.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.nofacepress</groupId>
+                <artifactId>spring-statemachine-chart-exporter</artifactId>
+                <version>0.3.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>1.19.8</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.docker-java</groupId>
+                <artifactId>docker-java-bom</artifactId>
+                <version>3.4.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.zeroturnaround</groupId>
+                <artifactId>zt-exec</artifactId>
+                <version>1.12</version>
+            </dependency>
+
+            <!-- -->
+            <!-- org.knowm.xchange -->
+            <!-- -->
+            <dependency>
+                <groupId>org.knowm.xchange</groupId>
+                <artifactId>xchange-core</artifactId>
+                <version>${org.knowm.xchange.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.knowm.xchange</groupId>
+                <artifactId>xchange-upbit</artifactId>
+                <version>${org.knowm.xchange.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.knowm.xchange</groupId>
+                <artifactId>xchange-binance</artifactId>
+                <version>${org.knowm.xchange.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.knowm.xchange</groupId>
+                <artifactId>xchange-coinmarketcap</artifactId>
+                <version>${org.knowm.xchange.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.knowm.xchange</groupId>
+                <artifactId>xchange-stream-core</artifactId>
+                <version>${org.knowm.xchange.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-all</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.knowm.xchange</groupId>
+                <artifactId>xchange-stream-binance</artifactId>
+                <version>${org.knowm.xchange.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>${java-jwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.binance</groupId>
+                <artifactId>binance-connector-java</artifactId>
+                <version>3.3.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.binance-exchange</groupId>
+                <artifactId>binance-java-api</artifactId>
+                <version>${binance-java-api.version}</version>
+            </dependency>
+
+            <!-- for openapi @javax.annotation.Nullable -->
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>3.0.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>33.2.1-jre</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.googlejavaformat</groupId>
+                <artifactId>google-java-format</artifactId>
+                <version>1.22.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.code.findbugs</groupId>
+                        <artifactId>jsr305</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>guava</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- for openapi-generator-maven-plugin -->
+            <dependency>
+                <groupId>io.swagger.parser.v3</groupId>
+                <artifactId>swagger-parser</artifactId>
+                <version>2.1.22</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openapitools</groupId>
+                <artifactId>jackson-databind-nullable</artifactId>
+                <version>0.2.6</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpmime</artifactId>
+                <version>4.5.14</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-models</artifactId>
+                <version>${swagger-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-integration</artifactId>
+                <version>${swagger-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-jaxrs2</artifactId>
+                <version>${swagger-api.version}</version>
+            </dependency>
+
+            <!-- -->
+            <!-- commons -->
+            <!-- -->
+            <dependency>
+                <groupId>commons-cli</groupId>
+                <artifactId>commons-cli</artifactId>
+                <version>1.8.0</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>1.5</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.16.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>1.12.0</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-validator</groupId>
+                <artifactId>commons-validator</artifactId>
+                <version>1.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-configuration2</artifactId>
+                <version>2.11.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>4.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>3.6.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.ant</groupId>
+                <artifactId>ant</artifactId>
+                <version>1.10.14</version>
+            </dependency>
+
+            <!-- -->
+            <!-- osgi -->
+            <!-- -->
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>osgi.annotation</artifactId>
+                <version>8.1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.framework</artifactId>
+                <version>7.0.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-csv</artifactId>
+                <version>1.11.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.univocity</groupId>
+                <artifactId>univocity-parsers</artifactId>
+                <version>2.9.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.dozermapper</groupId>
+                <artifactId>dozer-core</artifactId>
+                <version>7.0.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.github.dozermapper</groupId>
+                        <artifactId>dozer-schema</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.glassfish.jaxb</groupId>
+                        <artifactId>jaxb-runtime</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>jcl-over-slf4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>5.14.0</version>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna-platform</artifactId>
+                <version>5.14.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jvnet.winp</groupId>
+                <artifactId>winp</artifactId>
+                <version>1.28</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.java-diff-utils</groupId>
+                <artifactId>java-diff-utils</artifactId>
+                <version>4.12</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.docx4j</groupId>
+                <artifactId>docx4j-ImportXHTML</artifactId>
+                <version>11.4.8</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>log4j</artifactId>
+                        <groupId>log4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>slf4j-api</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>slf4j-log4j12</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jcl-over-slf4j</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-databind</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>5.3.0</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>log4j</artifactId>
+                        <groupId>log4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>xml-apis</artifactId>
+                        <groupId>xml-apis</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>stax-api</artifactId>
+                        <groupId>stax</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.beanshell</groupId>
+                <artifactId>bsh</artifactId>
+                <version>2.0b5</version>
+            </dependency>
+
+            <!-- -->
+            <!-- scala -->
+            <!-- -->
+            <dependency>
+                <groupId>org.scala-lang</groupId>
+                <artifactId>scala-library</artifactId>
+                <version>2.13.14</version>
+            </dependency>
+            <dependency>
+                <groupId>org.scalatest</groupId>
+                <artifactId>scalatest_2.13</artifactId>
+                <version>3.3.0-SNAP4</version>
+            </dependency>
+
+
+            <!-- -->
+            <!-- com4j -->
+            <!-- -->
+            <dependency>
+                <groupId>org.jvnet.com4j</groupId>
+                <artifactId>com4j</artifactId>
+                <version>2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jvnet.com4j</groupId>
+                <artifactId>tlbimp</artifactId>
+                <version>2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>args4j</groupId>
+                <artifactId>args4j</artifactId>
+                <version>2.37</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>1.18.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.squareup</groupId>
+                <artifactId>javapoet</artifactId>
+                <version>1.13.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.graalvm.js</groupId>
+                <artifactId>js</artifactId>
+                <version>23.0.5</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graalvm.js</groupId>
+                <artifactId>js-scriptengine</artifactId>
+                <version>24.0.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sourceforge.cssparser</groupId>
+                <artifactId>cssparser</artifactId>
+                <version>0.9.30</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.unix4j</groupId>
+                <artifactId>unix4j-command</artifactId>
+                <version>0.6</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.mwiede</groupId>
+                <artifactId>jsch</artifactId>
+                <version>0.2.18</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.mwiede.dockerjava</groupId>
+                <artifactId>docker-java-transport-jsch</artifactId>
+                <version>1.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>tech.tablesaw</groupId>
+                <artifactId>tablesaw-core</artifactId>
+                <version>0.43.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.slack.api</groupId>
+                <artifactId>slack-api-client</artifactId>
+                <version>${com.slack.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.slack.api</groupId>
+                <artifactId>bolt</artifactId>
+                <version>${com.slack.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.slack.api</groupId>
+                <artifactId>bolt-socket-mode</artifactId>
+                <version>${com.slack.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.slack.api</groupId>
+                <artifactId>bolt-jakarta-servlet</artifactId>
+                <version>${com.slack.api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.platanios</groupId>
+                <artifactId>tensorflow_2.13</artifactId>
+                <classifier>darwin-cpu-x86_64</classifier>
+                <version>0.6.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.pengrad</groupId>
+                <artifactId>java-telegram-bot-api</artifactId>
+                <version>7.7.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jasypt</groupId>
+                <artifactId>jasypt</artifactId>
+                <version>1.9.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.ulisesbocchio</groupId>
+                <artifactId>jasypt-spring-boot-starter</artifactId>
+                <version>${jasypt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.squareup.retrofit2</groupId>
+                <artifactId>retrofit</artifactId>
+                <version>2.11.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.retrofit2</groupId>
+                <artifactId>converter-jackson</artifactId>
+                <version>2.11.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>2.0.52</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.vavr</groupId>
+                <artifactId>vavr</artifactId>
+                <version>0.10.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-embedder</artifactId>
+                <version>${maven-bom.version}</version>
+            </dependency>
+            <!-- https://issues.apache.org/jira/browse/MNG-5995 -->
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-compat</artifactId>
+                <version>${maven-bom.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.resolver</groupId>
+                <artifactId>maven-resolver-connector-basic</artifactId>
+                <version>${org.apache.maven.resolver.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.resolver</groupId>
+                <artifactId>maven-resolver-transport-http</artifactId>
+                <version>${org.apache.maven.resolver.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.bonigarcia</groupId>
+                <artifactId>webdrivermanager</artifactId>
+                <version>5.9.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents.client5</groupId>
+                <artifactId>httpclient5</artifactId>
+                <version>5.3.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.saasquatch</groupId>
+                <artifactId>json-schema-inferrer</artifactId>
+                <version>0.2.1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>cz.habarta.typescript-generator</groupId>
+                <artifactId>typescript-generator-core</artifactId>
+                <version>3.2.1263</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- google api -->
+            <dependency>
+                <groupId>com.google.api-client</groupId>
+                <artifactId>google-api-client-bom</artifactId>
+                <version>2.5.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.http-client</groupId>
+                <artifactId>google-http-client-bom</artifactId>
+                <version>1.44.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.oauth-client</groupId>
+                <artifactId>google-oauth-client-bom</artifactId>
+                <version>1.36.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.auth</groupId>
+                <artifactId>google-auth-library-bom</artifactId>
+                <version>1.24.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.apis</groupId>
+                <artifactId>google-api-services-sheets</artifactId>
+                <version>v4-rev20240708-2.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.apis</groupId>
+                <artifactId>google-api-services-drive</artifactId>
+                <version>v3-rev20240628-2.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.apis</groupId>
+                <artifactId>google-api-services-youtube</artifactId>
+                <version>v3-rev20240514-2.0.0</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+</project>

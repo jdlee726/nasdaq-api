@@ -1,0 +1,59 @@
+{
+  "data": {
+    "symbol": "TSLA",
+    "companyName": "Tesla, Inc. Common Stock",
+    "stockType": "Common Stock",
+    "exchange": "NASDAQ-GS",
+    "isNasdaqListed": true,
+    "isNasdaq100": true,
+    "isHeld": false,
+    "primaryData": {
+      "lastSalePrice": "$248.23",
+      "netChange": "+7.20",
+      "percentageChange": "+2.99%",
+      "deltaIndicator": "up",
+      "lastTradeTimestamp": "Jul 12, 2024",
+      "isRealTime": false,
+      "bidPrice": "N/A",
+      "askPrice": "N/A",
+      "bidSize": "N/A",
+      "askSize": "N/A",
+      "volume": "155,955,773"
+    },
+    "secondaryData": null,
+    "marketStatus": "Closed",
+    "assetClass": "STOCKS",
+    "keyStats": {
+      "fiftyTwoWeekHighLow": {
+        "label": "52 Week Range:",
+        "value": "138.80 - 299.29"
+      },
+      "dayrange": {
+        "label": "High/Low:",
+        "value": "NA"
+      }
+    },
+    "notifications": [
+      {
+        "headline": "UPCOMING EVENTS",
+        "eventTypes": [
+          {
+            "message": "Earnings Date : Jul 23, 2024",
+            "eventName": "Earnings Date",
+            "url": {
+              "label": "TSLA Earnings Date : Jul 23, 2024",
+              "value": "/market-activity/stocks/TSLA/earnings"
+            },
+            "id": "upcoming_events"
+          }
+        ]
+      }
+    ]
+  },
+  "message": null,
+  "status": {
+    "rCode": 200,
+    "bCodeMessage": null,
+    "developerMessage": null
+  }
+}
