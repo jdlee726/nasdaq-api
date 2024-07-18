@@ -29,8 +29,7 @@ public class MyRetropitApiServiceGenerator {
     private Retrofit retrofit;
 
     private MyRetropitApiServiceGenerator(String API_BASE_URL) {
-        httpClientBuilder = new OkHttpClient.Builder()
-                .addInterceptor(new CompressionInterceptor());
+        httpClientBuilder = new OkHttpClient.Builder();
 
         retrofitBuilder = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
@@ -99,6 +98,4 @@ public class MyRetropitApiServiceGenerator {
         return executeSync(call).body();
     }
 
-
 }
-
