@@ -26,7 +26,6 @@ public class MyRetropitApiServiceGenerator {
 
     private final OkHttpClient.Builder httpClientBuilder;
     private final Retrofit.Builder retrofitBuilder;
-    private Retrofit retrofit;
 
     private MyRetropitApiServiceGenerator(String API_BASE_URL) {
         httpClientBuilder = new OkHttpClient.Builder();
@@ -42,15 +41,6 @@ public class MyRetropitApiServiceGenerator {
                         .registerModule(new Jdk8Module())
                         .registerModule(new SimpleModule().addDeserializer(BigDecimal.class, new CustomBigDecimalDeserializer()))
                 ));
-
-        if (log.isDebugEnabled()) {
-            var interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            httpClientBuilder.addInterceptor(interceptor);
-            retrofitBuilder.client(httpClientBuilder.build());
-        }
-
-        retrofit = retrofitBuilder.build();
     }
 
     public static MyRetropitApiServiceGenerator
@@ -68,10 +58,16 @@ public class MyRetropitApiServiceGenerator {
         if (interceptor != null) {
             if (!httpClientBuilder.interceptors().contains(interceptor)) {
                 httpClientBuilder.addInterceptor(interceptor);
-                retrofitBuilder.client(httpClientBuilder.build());
-                retrofit = retrofitBuilder.build();
             }
         }
+
+        if (log.isDebugEnabled()) {
+            var loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            httpClientBuilder.addInterceptor(loggingInterceptor);
+        }
+
+        var retrofit = retrofitBuilder.client(httpClientBuilder.build()).build();
         return retrofit.create(serviceClass);
     }
 
