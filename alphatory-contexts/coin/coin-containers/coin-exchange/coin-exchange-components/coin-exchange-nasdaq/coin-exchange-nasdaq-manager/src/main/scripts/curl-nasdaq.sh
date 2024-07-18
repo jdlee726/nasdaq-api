@@ -12,7 +12,7 @@ curl 'https://api.nasdaq.com/api/market-info?lang=de' \
 -H 'Sec-Fetch-Site: same-site' \
 -H 'TE: trailers'
 
-curl 'https://api.nasdaq.com/api/market-info' \
+curl -vvvv 'https://api.nasdaq.com/api/market-info' \
 --compressed \
 -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0' \
 -H 'Accept-Language: en-US,en;q=0.5'

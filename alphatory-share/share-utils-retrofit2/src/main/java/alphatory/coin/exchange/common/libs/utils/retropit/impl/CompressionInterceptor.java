@@ -19,7 +19,7 @@ class CompressionInterceptor implements Interceptor {
     public Response
     intercept(Chain chain) throws IOException {
         var originalRequest = chain.request();
-        if (originalRequest.body() == null || originalRequest.header("Content-Encoding") != null) {
+        if ( originalRequest.header("Content-Encoding") != null) {
             return chain.proceed(originalRequest);
         }
 
@@ -27,7 +27,11 @@ class CompressionInterceptor implements Interceptor {
                 // This interceptor compresses the HTTP request body. Many webservers can't handle this!
 //                .header("Content-Encoding", "gzip")
 //                .method(originalRequest.method(), gzip(originalRequest.body()))
-                .header("Accept-Encoding", "gzip, deflate, br, zstd")
+//                .header("Host","api.nasdaq.com")
+                .header("Accept","*/*")
+//                .header("Accept-Encoding", "deflate, gzip, br, zstd")
+                .header("User-Agent","Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0")
+                .header("Accept-Language","en-US,en;q=0.5'")
                 .build();
         var response = chain.proceed(compressionRequest);
         return unzip(response);
